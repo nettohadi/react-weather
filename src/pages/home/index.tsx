@@ -24,6 +24,7 @@ export default function Home() {
     const [error, setError] = useState('');
     const searchInput = useRef<HTMLInputElement | null>();
 
+
     const days = weatherData.daily.map(d => d.day);
 
     function selectDay(number: number) {
@@ -40,11 +41,10 @@ export default function Home() {
     }
 
     useEffect(() => {
-        mockAllFetch(true);
         fetchWeatherData();
     }, []);
 
-    useEffect(() => console.log('rerender'));
+    // useEffect(() => console.log('rerender'));
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -57,7 +57,6 @@ export default function Home() {
         setError('');
         fetchAll(cityName)
             .then(data => {
-                console.log({data})
                 setWeatherData(data);
             })
             .catch(e => {
@@ -70,12 +69,6 @@ export default function Home() {
 
     }
 
-    function fetchWeatherDataMock(cityName = ''){
-        setLoading(true);
-        setWeatherData(mockWeatherData());
-        setLoading(false);
-    }
-
     function setWeatherBackground() {
         return 'weather-' + weatherData.daily[dayIndex]?.desc.icon.slice(0, 2);
     }
@@ -86,10 +79,10 @@ export default function Home() {
 
     function WeatherDays() {
         return (
-            <div className='days-box'>
+            <div className='days-box' data-testid='days-box'>
                 {days.map((day, index) => (
                     <div key={index} className={days[dayIndex] === day ? 'selected' : ''}
-                         onClick={() => setDayIndex(index)}>
+                         onClick={() => setDayIndex(index)} data-testid={`weather-days-${index}`}>
                         {day.slice(0, 3)}
                     </div>
                 ))}
@@ -100,12 +93,12 @@ export default function Home() {
 
     function PrevArrow() {
         return <img src={leftArrow} width={30} alt="arrow" className='arrow'
-                    onClick={() => selectDay(-1)}/>;
+                    onClick={() => selectDay(-1)} data-testid='prev-arrow'/>;
     }
 
     function NextArrow() {
         return <img src={rightArrow} width={30} alt="arrow" className='arrow'
-                    onClick={() => selectDay(1)}/>;
+                    onClick={() => selectDay(1)} data-testid='next-arrow'/>;
     }
 
     const ifHourlyDataIsEmpty = weatherData?.daily[dayIndex]?.hourly?.length === 0 && !isLoading;
@@ -116,8 +109,8 @@ export default function Home() {
                 <form onSubmit={handleSubmit}>
                     <input type="text"
                             placeholder='Type city name' defaultValue={searchInput.current?.value}
-                           ref={(ref) => searchInput.current = ref}/>
-                    <button onClick={handleSubmit} className='search-button'>
+                           ref={(ref) => searchInput.current = ref} data-testid='input-search-city'/>
+                    <button onClick={handleSubmit} className='search-button' data-testid='button-search-city'>
                         <i className="fas fa-search"></i>
                     </button>
                 </form>
@@ -130,20 +123,21 @@ export default function Home() {
             <div>
                 <div className='forecast day'>
                     <div>
-                        <h2>{weatherData.city}</h2>
+                        <h2 data-testid='city-name'>{weatherData.city}</h2>
                         <div className="loading-skeleton city"></div>
                     </div>
                     <WeatherDays/>
                     <div className='forecast-selected-day-wrapper'>
                         <PrevArrow/>
                         <div className='forecast-inner' style={{gap: 50}}>
-                            {weatherData.daily.map((item, index) => {
-                                return (
-                                    <Weather visible={days[dayIndex] === item.day}
-                                             key={index}
-                                             weather={item}
-                                             height={200}/>
-                                );
+                            {weatherData.daily.filter(item => days[dayIndex] === item.day)
+                                .map((item, index) => {
+                                    return (
+                                        <Weather visible={true}
+                                                 key={index}
+                                                 weather={item}
+                                                 height={200}/>
+                                    );
                             })}
                             <div className="loading-skeleton selected-day"></div>
                         </div>
@@ -172,19 +166,18 @@ export default function Home() {
         );
     }
 
-    function ErrorMessage({errorCode}:any){
-        console.log({errorCode});
+    function ErrorMessage({errorCode}:{errorCode:string}){
         switch (errorCode){
             case '404':
                 return (
-                    <div className='error-wrapper'>
+                    <div className='error-wrapper' data-testid='error-404'>
                         <h1>City Is Not Found</h1>
                         <h3>It Might Be A Typo or The City Does Not Exist</h3>
                     </div>
                 );
             default:
                 return (
-                    <div className='error-wrapper'>
+                    <div className='error-wrapper' data-testid='error-500'>
                         <h1>Ooops Something Went Wrong</h1>
                     </div>
                 );

@@ -5,34 +5,27 @@ import {getUnixTime} from 'date-fns';
 
 
 const appId = '6d875ebff1f24739c03d55ca8d6dc535';
-// const appId2 = '6d875ebff1f24739c03d55ca8d6dc535';
 const units = 'metric';
 
-let isMockAllFetch = false;
-
-export function mockAllFetch(status = false) {
-    isMockAllFetch = status;
-}
-
-
 export async function fetchDaily(lat: number = -8.650979, long: number = 116.324944) {
-    if (isMockAllFetch) return mockDailyData();
+    if (isMockAllFetch && dailyMockResponse) return dailyMockResponse;
 
     const dailyEndpoint =
         `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${appId}&units=${units}`;
     try {
         const response = await fetch(dailyEndpoint);
         const data = await response.json();
+        if (data.cod !== '200') throw new Error(data.cod);
         return data;
     } catch (e) {
-        console.log('daily fetch', {error: e})
+        throw new Error('Daily fetch' + e.message);
     }
 
 }
 
 export async function fetchHourly(cityName: string = 'jakarta') {
 
-    if (isMockAllFetch) return mockHourlyData();
+    if (isMockAllFetch && hourlyMockResponse) return hourlyMockResponse;
 
     const hourlyEndpoint =
         `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${appId}&units=${units}`;
@@ -42,7 +35,7 @@ export async function fetchHourly(cityName: string = 'jakarta') {
         const data = await response.json();
         return data;
     } catch (e) {
-        console.log('hourly fetch', {error: e})
+        throw new Error('Hourly fetch' + e.message);
     }
 }
 
@@ -59,12 +52,9 @@ export async function fetchAll(cityName: string) {
     const dailyWeathers: IDailyWeather[] = [];
 
     const hourly = await fetchHourly(cityName);
-
     if (hourly.cod !== '200') throw new Error(hourly.cod);
 
-    console.log({hourly});
     const daily = await fetchDaily(hourly.city.coord.lat, hourly.city.coord.lon);
-    console.log({daily});
 
     weatherData.city = hourly?.city?.name;
     weatherData.population = hourly?.city?.population;
@@ -134,11 +124,11 @@ export async function fetchAll(cityName: string) {
 }
 
 const datesMock = [
-    getUnixTime(new Date(2021, 6, 27, 11, 0, 0)).toString(),
-    getUnixTime(new Date(2021, 6, 28, 12, 0, 0)).toString(),
-    getUnixTime(new Date(2021, 6, 29, 13, 0, 0)).toString(),
-    getUnixTime(new Date(2021, 6, 30, 14, 0, 0)).toString(),
-    getUnixTime(new Date(2021, 6, 31, 15, 0, 0)).toString(),
+    getUnixTime(new Date(2021, 6, 27, 11, 0, 0)),
+    getUnixTime(new Date(2021, 6, 28, 12, 0, 0)),
+    getUnixTime(new Date(2021, 6, 29, 13, 0, 0)),
+    getUnixTime(new Date(2021, 6, 30, 14, 0, 0)),
+    getUnixTime(new Date(2021, 6, 31, 15, 0, 0)),
 ]
 
 const weathersMock = [
@@ -174,10 +164,10 @@ const weathersMock = [
     }
 ];
 
-function mockHourlyData() {
+export function mockHourlyData(cityName='mataram') {
     return {
         city: {
-            name: 'mataram',
+            name: cityName,
             population: 10000,
             country: 'ID',
             coord: {
@@ -232,7 +222,7 @@ function mockHourlyData() {
     }
 }
 
-function mockDailyData() {
+export function mockDailyData() {
     return {
         daily: [
             {
@@ -289,6 +279,24 @@ function mockDailyData() {
     }
 }
 
-function getTime(date: Date) {
+export function getTime(date: Date) {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+}
+
+
+let isMockAllFetch = false;
+
+export function mockAllFetch(status = false) {
+    isMockAllFetch = status;
+}
+
+let dailyMockResponse:any;
+let hourlyMockResponse:any;
+
+export function setDailyMockResponse(mock:any){
+    dailyMockResponse = mock;
+}
+
+export function setHourlyMockResponse(mock:any){
+    hourlyMockResponse = mock;
 }

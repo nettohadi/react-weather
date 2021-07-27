@@ -46,8 +46,9 @@ export const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday',
 
 export function repeat(count = 1, start = 1) {
     const dummies: number[] = [];
-    for (let i = start || 1; i <= count; i++) {
-        dummies.push(i);
+    let loopCount = 0;
+    for (let i = start; loopCount < count; loopCount++) {
+        dummies.push(i++);
     }
 
     return dummies;

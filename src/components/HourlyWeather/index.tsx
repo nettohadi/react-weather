@@ -12,7 +12,7 @@ interface PropsType {
 export default function HourlyWeather({weather, height, width}: PropsType) {
     return (
         <div className='weather-wrapper hourly'
-             style={ {fontSize: (height / 10)}}>
+             style={ {fontSize: (height / 10)}} data-test='selected-day-hourly-weather'>
 
             <div><h2>{weather?.time}</h2></div>
             <div style={{display: 'flex', justifyContent:'center', alignItems:'center', gap: 10, fontSize: 12}}>

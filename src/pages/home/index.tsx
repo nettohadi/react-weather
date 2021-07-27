@@ -4,10 +4,9 @@ import HourlyWeather from "../../components/HourlyWeather";
 import rightArrow from '../../assets/images/right-arrow.png';
 import leftArrow from '../../assets/images/left-arrow.png';
 import {FormEvent, useEffect, useRef, useState} from "react";
-import {fetchAll, mockAllFetch} from "../../utils/api";
+import {fetchAll} from "../../utils/api";
 import {IWeatherData} from "../../types";
 import {repeat} from "../../utils";
-import {mockWeatherData} from "../../utils/apiMock";
 
 const initialWeatherData = {
     city: '',
@@ -24,11 +23,10 @@ export default function Home() {
     const [error, setError] = useState('');
     const searchInput = useRef<HTMLInputElement | null>();
 
-
     const days = weatherData.daily.map(d => d.day);
 
     function selectDay(number: number) {
-        //selecting day should go in a loop
+        //selecting a day should go in a loop
         if ((dayIndex + number) < 0) {
             //first index
             setDayIndex(days.length - 1);
@@ -42,9 +40,14 @@ export default function Home() {
 
     useEffect(() => {
         fetchWeatherData();
-    }, []);
 
-    // useEffect(() => console.log('rerender'));
+        //Refresh every 5 minutes
+        const interval = setInterval(() => {
+            fetchWeatherData(searchInput.current?.value || '');
+        }, 1000 * 60 * 5);
+
+        return () => {clearInterval(interval)};
+    }, []);
 
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
@@ -133,8 +136,7 @@ export default function Home() {
                             {weatherData.daily.filter(item => days[dayIndex] === item.day)
                                 .map((item, index) => {
                                     return (
-                                        <Weather visible={true}
-                                                 key={index}
+                                        <Weather key={index}
                                                  weather={item}
                                                  height={200}/>
                                     );
@@ -171,14 +173,14 @@ export default function Home() {
             case '404':
                 return (
                     <div className='error-wrapper' data-testid='error-404'>
-                        <h1>City Is Not Found</h1>
-                        <h3>It Might Be A Typo or The City Does Not Exist</h3>
+                        <h1>City is not found</h1>
+                        <h3>It might be a typo or the city does not exist</h3>
                     </div>
                 );
             default:
                 return (
                     <div className='error-wrapper' data-testid='error-500'>
-                        <h1>Ooops Something Went Wrong</h1>
+                        <h1>Oops Something Went Wrong</h1>
                     </div>
                 );
         }

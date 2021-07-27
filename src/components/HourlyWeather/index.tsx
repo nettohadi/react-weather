@@ -5,17 +5,18 @@ import {IHourlyWeather} from "../../types";
 
 interface PropsType {
     weather:IHourlyWeather
-    width?: string,
     height: number,
 }
 
-export default function HourlyWeather({weather, height, width}: PropsType) {
+export default function HourlyWeather({weather, height}: PropsType) {
     return (
         <div className='weather-wrapper hourly'
-             style={ {fontSize: (height / 10)}} data-test='selected-day-hourly-weather'>
+             style={{fontSize: (height / 10)}} data-test='selected-day-hourly-weather'>
 
-            <div><h2>{weather?.time}</h2></div>
-            <div style={{display: 'flex', justifyContent:'center', alignItems:'center', gap: 10, fontSize: 12}}>
+            <div style={{fontSize: 13}}>
+                {weather?.time}
+            </div>
+            <div className='hourly-inner-wrapper'>
                 <img width='auto'
                      height={25}
                      src={mapWeatherImage(weather?.desc.icon)} alt="weather"/>

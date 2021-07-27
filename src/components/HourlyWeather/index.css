@@ -3,7 +3,6 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
-    padding: 15px 10px;
     min-width: 60px;
     width: 95%;
     color: white;
@@ -29,4 +28,12 @@
 
 .weather-wrapper.hourly.selected {
     background-color: rgba(255, 255, 255, 0.23);
+}
+
+.hourly-inner-wrapper {
+    display: flex;
+    justify-content:center;
+    align-items:center;
+    gap: 10px;
+    font-size: 12px
 }

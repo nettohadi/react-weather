@@ -1,6 +1,10 @@
-# Getting Started with Create React App
+# Weather App Created Using React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="https://weather.hadi-syahbal.com/weather-app.jpg"/>
+
+Live link : https://weather.hadi-syahbal.com/
+
+Weather data is fetched from https://openweathermap.org/
 
 ## Available Scripts
 

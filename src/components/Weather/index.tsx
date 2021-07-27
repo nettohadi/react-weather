@@ -6,16 +6,14 @@ import {format} from "date-fns";
 
 interface PropsType {
     weather: IDailyWeather
-    width?: string,
-    height: number,
-    visible?: boolean,
+    height: number
 }
 
-export default function Weather({weather, height, width, visible}: PropsType) {
+export default function Weather({weather, height}: PropsType) {
     const dateString = format(weather.date,'dd MMM yyyy');
     return (
         <div className='weather-wrapper'
-             style={{height: height, fontSize: (height / 10), display: (visible ? 'flex' : 'none')}}>
+             style={{height: height, fontSize: (height / 10)}}>
             <h2 data-testid='selected-day-date'>{`${weather?.day}, ${dateString}`}</h2>
             <img width='auto'
                  data-testid='selected-day-icon'

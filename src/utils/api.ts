@@ -15,10 +15,9 @@ export async function fetchDaily(lat: number = -8.650979, long: number = 116.324
     try {
         const response = await fetch(dailyEndpoint);
         const data = await response.json();
-        if (data.cod !== '200') throw new Error(data.cod);
         return data;
     } catch (e) {
-        throw new Error('Daily fetch' + e.message);
+        throw new Error('Daily fetch' + e);
     }
 
 }
@@ -35,12 +34,12 @@ export async function fetchHourly(cityName: string = 'jakarta') {
         const data = await response.json();
         return data;
     } catch (e) {
-        throw new Error('Hourly fetch' + e.message);
+        throw new Error('Hourly fetch' + e);
     }
 }
 
 export async function fetchAll(cityName: string) {
-    cityName = cityName || 'mataram';
+    cityName = cityName || 'yogyakarta';
     const weatherData: IWeatherData = {
         city: '',
         country: '',

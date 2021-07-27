@@ -4,7 +4,6 @@ import fromUnixTime from 'date-fns/fromUnixTime';
 import {getUnixTime} from 'date-fns';
 import axios from "axios";
 
-
 const appId = '6d875ebff1f24739c03d55ca8d6dc535';
 const units = 'metric';
 

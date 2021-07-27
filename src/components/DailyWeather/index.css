@@ -1,0 +1,24 @@
+.weather-wrapper.daily {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px 10px;
+    border-radius: 5px;
+}
+
+.weather-wrapper.daily > h2 {
+    font-size: 1.2em;
+}
+
+.weather-wrapper.daily > h3 {
+    font-size: 1em;
+}
+
+.weather-wrapper.daily > h5 {
+    font-size: .8em;
+}
+
+.weather-wrapper.daily.selected {
+    background-color: rgba(255, 255, 255, 0.23);
+}

@@ -1,0 +1,32 @@
+.weather-wrapper.hourly {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px 10px;
+    min-width: 60px;
+    width: 95%;
+    color: white;
+    height: 50px;
+}
+
+.weather-wrapper.hourly > div {
+    width: 33%;
+    text-align: center;
+}
+
+.weather-wrapper.hourly > h2 {
+    font-size: 1.2em;
+}
+
+.weather-wrapper.hourly > h3 {
+    font-size: 1em;
+}
+
+.weather-wrapper.hourly > h5 {
+    font-size: .8em;
+}
+
+.weather-wrapper.hourly.selected {
+    background-color: rgba(255, 255, 255, 0.23);
+}

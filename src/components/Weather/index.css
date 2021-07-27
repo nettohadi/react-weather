@@ -1,0 +1,22 @@
+.weather-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.weather-wrapper > h2 {
+    font-size: 1.2em;
+}
+
+.weather-wrapper > h3 {
+    font-size: 1em;
+}
+
+.weather-wrapper > h5 {
+    font-size: .9rem;
+}
+
+.weather-wrapper > img {
+    margin: 10px 0px;
+}

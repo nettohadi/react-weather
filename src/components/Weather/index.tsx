@@ -1,24 +1,33 @@
 import './index.css'
-import sunny from '../../assets/images/sunny.png';
+import {mapWeatherImage} from "../../utils";
+import {IDailyWeather} from "../../types";
 
-type PropsType = {
-    width: string,
-    height: string
+
+interface PropsType {
+    weather: IDailyWeather
+    width?: string,
+    height: number,
+    visible?: boolean,
 }
 
-export default function Sunny(props: PropsType) {
+export default function Weather({weather, height, width, visible}: PropsType) {
     return (
-        <div>
-            <h1 className='city-name'>Mataram, Indonesia</h1>
-            <h2>
-                Today
-            </h2>
-            <h5>24th july 2021</h5>
-            <img width={props.width}
-                 height={props.height}
-                 src={sunny} alt="sunny-weather"/>
-            <h3>30 °F</h3>
-            <h5>Sunny</h5>
+        <div className='weather-wrapper'
+             style={{height: height, fontSize: (height / 10), display: (visible ? 'flex' : 'none')}}>
+            <h2>{`${weather?.day}, ${weather.date.getDate()}/${weather.date.getMonth() + 1}`}</h2>
+            {/*<h5>{date}</h5>*/}
+            <img width='auto'
+                 height={'40%'}
+                 src={mapWeatherImage(weather?.desc.icon)} alt="weather"/>
+            <h5>
+                <i className="fas fa-tint"></i>
+                {weather?.humidity}%
+                <i className="fas fa-wind"></i>
+                {weather?.wind_speed} mph
+                <i className="fas fa-thermometer-quarter"></i>
+                {weather?.temp.min} ° {(weather?.temp.min !== weather?.temp.max) ? ' - ' + weather?.temp.max + ' °' : ''}
+            </h5>
+            <h5>{weather?.desc.long}</h5>
         </div>
     );
 }

@@ -2,8 +2,9 @@ import React from 'react';
 import App from "../../App";
 import {act} from "react-dom/test-utils";
 import {
+    getDailyMockResponse,
+    getHourlyMockResponse,
     getTime,
-    mockAllFetch,
     mockDailyData,
     mockHourlyData,
     setDailyMockResponse,
@@ -14,6 +15,8 @@ import {render, unmountComponentAtNode} from "react-dom";
 import {format, fromUnixTime} from "date-fns";
 import {dayNames, weatherImages} from "../../utils";
 import {fireEvent, getByAltText, getByTestId} from "@testing-library/react";
+import axios from "axios";
+jest.mock('axios');
 
 let root: any;
 let mockedHourly: any;
@@ -23,7 +26,22 @@ beforeEach(() => {
     // setup a DOM element as a render target
     root = document.createElement("div");
     document.body.appendChild(root);
-    mockAllFetch(true);
+
+    const mockedAxios = axios as jest.Mocked<typeof axios>;
+    mockedAxios.get.mockImplementation((url:string) => {
+        switch (true){
+            case /forecast/.test(url):
+                //hourly api
+                return Promise.resolve({data:getHourlyMockResponse()});
+                break;
+            case /onecall/.test(url):
+                //daily api
+                return Promise.resolve({data:getDailyMockResponse()});
+                break;
+            default:
+                return Promise.reject(new Error());
+        }
+    });
 });
 
 afterEach(() => {
@@ -31,13 +49,11 @@ afterEach(() => {
     unmountComponentAtNode(root);
     root.remove();
     root = null;
-    mockAllFetch(false);
 });
 
 it('should render everything correctly on initial load', async () => {
 
     //Arrange
-    mockAllFetch(true);
     setDailyMockResponse(mockDailyData());
     setHourlyMockResponse(mockHourlyData());
     mockedDaily = mockDailyData();
@@ -50,13 +66,10 @@ it('should render everything correctly on initial load', async () => {
 
     fullPageAssertion();
 
-    mockAllFetch(false);
-
 });
 
 it('should render the next day weather details when next arrow is clicked', async () => {
     //Arrange
-    mockAllFetch(true);
     setDailyMockResponse(mockDailyData());
     setHourlyMockResponse(mockHourlyData());
     mockedDaily = mockDailyData();
@@ -80,13 +93,10 @@ it('should render the next day weather details when next arrow is clicked', asyn
     fireEvent.click(getByTestId(root, arrow));
     //Should go to the first day when it reaches the end
     fullPageAssertion(0);
-
-    mockAllFetch(false);
 });
 
 it('should render the previous day weather details when previous arrow is clicked', async () => {
     //Arrange
-    mockAllFetch(true);
     setDailyMockResponse(mockDailyData());
     setHourlyMockResponse(mockHourlyData());
     mockedDaily = mockDailyData();
@@ -112,7 +122,6 @@ it('should render the previous day weather details when previous arrow is clicke
     }
 
 
-    mockAllFetch(false);
 });
 
 it('should render the correct weather details when particular day is clicked', async () => {

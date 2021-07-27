@@ -35,11 +35,6 @@
     cursor: pointer;
 }
 
-@media screen and (max-width: 768px){
-    /*.arrow {*/
-    /*    display: none;*/
-    /*}*/
-}
 
 .forecast-inner.hourly {
     flex-direction: column;
@@ -76,12 +71,6 @@
     height: auto;
     overflow: hidden;
     padding-top: 20px;
-}
-
-@media screen and (max-width: 500px) {
-    .forecast-inner, .forecast-inner.daily {
-        justify-content: start;
-    }
 }
 
 .wrapper h1,

@@ -186,7 +186,6 @@ export default function Home() {
         }
     }
 
-
     return (
         <div className={`wrapper ${setLoadingStatus()} ${setWeatherBackground()}`}>
             <SearchCityForm/>

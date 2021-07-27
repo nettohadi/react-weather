@@ -2,39 +2,33 @@ import {IDailyWeather, IHourlyWeather, IWeatherData} from '../types';
 import {dayNames} from './index';
 import fromUnixTime from 'date-fns/fromUnixTime';
 import {getUnixTime} from 'date-fns';
+import axios from "axios";
 
 
 const appId = '6d875ebff1f24739c03d55ca8d6dc535';
 const units = 'metric';
 
 export async function fetchDaily(lat: number = -8.650979, long: number = 116.324944) {
-    if (isMockAllFetch && dailyMockResponse) return dailyMockResponse;
-
     const dailyEndpoint =
         `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${long}&appid=${appId}&units=${units}`;
     try {
-        const response = await fetch(dailyEndpoint);
-        const data = await response.json();
-        return data;
+        const response = await axios.get(dailyEndpoint);
+        return response.data;
     } catch (e) {
-        throw new Error('Daily fetch' + e);
+        return e.response.data;
     }
 
 }
 
 export async function fetchHourly(cityName: string = 'jakarta') {
-
-    if (isMockAllFetch && hourlyMockResponse) return hourlyMockResponse;
-
     const hourlyEndpoint =
         `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${appId}&units=${units}`;
 
     try {
-        const response = await fetch(hourlyEndpoint);
-        const data = await response.json();
-        return data;
+        const response = await axios.get(hourlyEndpoint);
+        return response.data;
     } catch (e) {
-        throw new Error('Hourly fetch' + e);
+        return e.response.data;
     }
 }
 
@@ -282,13 +276,6 @@ export function getTime(date: Date) {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
 }
 
-
-let isMockAllFetch = false;
-
-export function mockAllFetch(status = false) {
-    isMockAllFetch = status;
-}
-
 let dailyMockResponse:any;
 let hourlyMockResponse:any;
 
@@ -298,4 +285,12 @@ export function setDailyMockResponse(mock:any){
 
 export function setHourlyMockResponse(mock:any){
     hourlyMockResponse = mock;
+}
+
+export function getDailyMockResponse(){
+    return dailyMockResponse;
+}
+
+export function getHourlyMockResponse(){
+    return hourlyMockResponse;
 }
